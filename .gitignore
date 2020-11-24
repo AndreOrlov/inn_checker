@@ -33,4 +33,20 @@ npm-debug.log
 # this depending on your deployment strategy.
 /priv/static/
 
-/config/prod.secret.exs
+# Dialyzer
+/priv/plts/*.plt.hash
+
+# editors
+/.elixir_ls/
+/.vscode/
+/tmp/
+/db_data/
+/config/*.secret.exs
+
+# dev database
+/rel/db_data
+/rel/uploads
+/rel/docker-compose.yml
+
+# asdf local versions
+.tool-versions

@@ -1,0 +1,14 @@
+version: '3.3'
+services:
+  store:
+    image: postgres:12-alpine
+    volumes:
+      - ./db_data:/data
+    ports:
+      - 5432:5432
+    environment:
+      LANG: ru_RU.utf8
+      PGDATA: /data
+      POSTGRES_DB: inn_checker_dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
