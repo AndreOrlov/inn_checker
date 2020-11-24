@@ -7,6 +7,8 @@ defmodule InnChecker.Application do
 
   def start(_type, _args) do
     children = [
+      # Start Redis
+      {Redix, host: System.get_env("REDIS_URL", "localhost"), name: Redix},
       # Start the Ecto repository
       InnChecker.Repo,
       # Start the Telemetry supervisor

@@ -12,3 +12,7 @@ services:
       POSTGRES_DB: inn_checker_dev
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+  kv_store:
+    image: redis:alpine
+    ports:
+      - "6379:6379"

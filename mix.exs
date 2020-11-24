@@ -48,6 +48,8 @@ defmodule InnChecker.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
 
+      {:redix, "~> 1.0"}, # KV-storage
+
       # code climate
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
