@@ -1,5 +1,5 @@
 <section class="phx-hero">
-  <h1><%= gettext "Welcome to %{name}!", name: "Phoenix" %></h1>
+  <h1><%= gettext "Welcome from ip %{name}!", name: tuple_to_str(@remote_ip) %></h1>
   <p>Peace of mind from prototype to production</p>
 
   <form phx-change="suggest" phx-submit="search">
@@ -11,6 +11,20 @@
     </datalist>
     <button type="submit" phx-disable-with="Searching...">Go to Hexdocs</button>
   </form>
+
+  <p>Input INN, please</p>
+  <form phx-submit="inn_check">
+    <input type="text" name="inn-value" value="<%= @inn_value %>" maxlength="20" placeholder="Input INN" autocomplete="off"/>
+    <button type="submit" phx-disable-with="Checking...">
+      Check INN
+    </button>
+  </form>
+  <h2> History </h2>
+  <ul>
+    <%= for str <- @history_queries do %>
+      <li><%= str %></li>
+    <% end %>
+  </ul>
 </section>
 
 <section class="row">
