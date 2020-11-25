@@ -1,62 +1,23 @@
 <section class="phx-hero">
   <h1><%= gettext "Welcome from ip %{name}!", name: tuple_to_str(@remote_ip) %></h1>
-  <p>Peace of mind from prototype to production</p>
-
-  <form phx-change="suggest" phx-submit="search">
-    <input type="text" name="q" value="<%= @query %>" placeholder="Live dependency search" list="results" autocomplete="off"/>
-    <datalist id="results">
-      <%= for {app, _vsn} <- @results do %>
-        <option value="<%= app %>"><%= app %></option>
-      <% end %>
-    </datalist>
-    <button type="submit" phx-disable-with="Searching...">Go to Hexdocs</button>
-  </form>
-
   <p>Input INN, please</p>
   <form phx-submit="inn_check">
-    <input type="text" name="inn-value" value="<%= @inn_value %>" maxlength="20" placeholder="Input INN" autocomplete="off"/>
+    <input type="text" name="inn-value" value="<%= @inn_value %>" maxlength="12" placeholder="Input INN" autocomplete="off"/>
     <button type="submit" phx-disable-with="Checking...">
       Check INN
     </button>
   </form>
-  <h2> History </h2>
-  <dl>
-    <%= for str <- @history_queries do %>
-      <dt class="history"><%= str %></dt>
-    <% end %>
-  </dl>
 </section>
 
 <section class="row">
-  <article class="column">
-    <h2>Resources</h2>
-    <ul>
-      <li>
-        <a href="https://hexdocs.pm/phoenix/overview.html">Guides &amp; Docs</a>
-      </li>
-      <li>
-        <a href="https://github.com/phoenixframework/phoenix">Source</a>
-      </li>
-      <li>
-        <a href="https://github.com/phoenixframework/phoenix/blob/v1.5/CHANGELOG.md">v1.5 Changelog</a>
-      </li>
-    </ul>
-  </article>
-  <article class="column">
-    <h2>Help</h2>
-    <ul>
-      <li>
-        <a href="https://elixirforum.com/c/phoenix-forum">Forum</a>
-      </li>
-      <li>
-        <a href="https://webchat.freenode.net/?channels=elixir-lang">#elixir-lang on Freenode IRC</a>
-      </li>
-      <li>
-        <a href="https://twitter.com/elixirphoenix">Twitter @elixirphoenix</a>
-      </li>
-      <li>
-        <a href="https://elixir-slackin.herokuapp.com/">Elixir on Slack</a>
-      </li>
-    </ul>
-  </article>
+  <div class="column">
+    <%=if has_history(@history_queries) do %>
+    <h3> History </h2>
+    <dl>
+      <%= for str <- @history_queries do %>
+        <dt class="history"><%= str %></dt>
+      <% end %>
+    </dl>
+    <% end %>
+  </div>
 </section>
