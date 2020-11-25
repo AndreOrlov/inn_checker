@@ -20,11 +20,11 @@
     </button>
   </form>
   <h2> History </h2>
-  <ul>
+  <dl>
     <%= for str <- @history_queries do %>
-      <li><%= str %></li>
+      <dt class="history"><%= str %></dt>
     <% end %>
-  </ul>
+  </dl>
 </section>
 
 <section class="row">
