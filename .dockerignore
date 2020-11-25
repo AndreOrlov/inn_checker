@@ -1,0 +1,13 @@
+_build/
+deps/
+.git/
+.gitignore
+Dockerfile
+# Makefile
+README*
+test/
+priv/uploads/
+db_data/
+tmp/
+rel/docker-compose.stage.yml
+rel/db_data
