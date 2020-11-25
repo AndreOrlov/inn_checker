@@ -8,6 +8,7 @@ defmodule InnCheckerWeb.Router do
     plug :put_root_layout, {InnCheckerWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :put_client_ip
   end
 
   pipeline :api do
@@ -39,5 +40,10 @@ defmodule InnCheckerWeb.Router do
       pipe_through :browser
       live_dashboard "/dashboard", metrics: InnCheckerWeb.Telemetry
     end
+  end
+
+  def put_client_ip(conn, _) do
+    IO.inspect(conn)
+    Plug.Conn.put_session(conn, :remote_ip, conn.remote_ip)
   end
 end
