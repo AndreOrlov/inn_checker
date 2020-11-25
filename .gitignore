@@ -45,8 +45,7 @@ npm-debug.log
 
 # dev database
 /rel/db_data
-/rel/uploads
-/rel/docker-compose.yml
+/rel/docker-compose.stage.yml
 
 # asdf local versions
 .tool-versions
