@@ -13,7 +13,7 @@ defmodule InnChecker.ReleaseTasks do
     :ecto_sql # If using Ecto 3.0 or higher
   ]
 
-  @repos Application.get_env(:inn_checker, :ecto_repos, [])
+  @repos Application.compile_env(:inn_checker, :ecto_repos, [])
 
   def migrate do
     start_services()

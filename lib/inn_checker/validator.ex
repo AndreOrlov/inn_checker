@@ -22,7 +22,6 @@ defmodule InnChecker.Validator do
     is_valid(inn_string, @multipliers9, 9)
   end
 
-
   @multipliers10 [7, 2, 4, 10, 3, 5, 9, 4, 6, 8]
   @multipliers11 [3, 7, 2, 4, 10, 3, 5, 9, 4, 6, 8]
   defp validation12(inn_string) do
