@@ -1,4 +1,4 @@
-defmodule InnChecker.Accounts.History do
+defmodule InnChecker.Schema.History do
   @moduledoc false
 
   use Ecto.Schema
@@ -9,8 +9,8 @@ defmodule InnChecker.Accounts.History do
   @foreign_key_type :binary_id
 
   schema "histories" do
-    field :inn, :string, default: "unknown"
-    field :ip, :string
+    field :ip, :string, default: "unknown"
+    field :inn, :string
     field :status, :string
 
     timestamps()
@@ -19,11 +19,10 @@ defmodule InnChecker.Accounts.History do
   # NOTE: this using must be placed below schema definition as it uses %__MODULE__{} inside
   use InnChecker.Schema
 
-  @required_fields ~w[ip status]a
-  @optional_fields ~w[inn]a
+  @required_fields ~w[inn status]a
+  @optional_fields ~w[ip]a
   @statuses ~w[correct incorrect]
 
-  @doc false
   def changeset(history, attrs) do
     history
     |> cast(attrs, @required_fields ++ @optional_fields)
