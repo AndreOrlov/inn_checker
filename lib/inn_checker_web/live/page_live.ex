@@ -8,7 +8,14 @@ defmodule InnCheckerWeb.PageLive do
 
   @impl true
   def mount(_params, %{"remote_ip" => remote_ip} = _session, socket) do
+    if connected?(socket), do: send(self(), :update)
+
     {:ok, assign(socket, results: %{}, inn_value: "", history_queries: [], remote_ip: remote_ip)}
+  end
+
+  def handle_info(:update, %{assigns: %{remote_ip: remote_ip}} = socket) do
+    history_queries = history_load_for(remote_ip)
+    {:noreply, assign(socket, history_queries: history_queries)}
   end
 
   @impl true
@@ -55,5 +62,15 @@ defmodule InnCheckerWeb.PageLive do
       {:ok, _history} = res -> res
       {:error, _}          -> {:error, :not_save}
     end
+  end
+
+  defp history_load_for(ip) when is_tuple(ip) do
+    history_load_for(tuple_to_str(ip))
+  end
+  defp history_load_for(ip) when is_binary(ip) do
+    History.get(%{ip: ip})
+    |> Enum.map(fn %History{ip: ip, inn: inn, inserted_at: inserted_at, status: status} ->
+        format_result(inn, inserted_at, status)
+       end)
   end
 end
