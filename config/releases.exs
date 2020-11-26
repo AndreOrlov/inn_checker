@@ -18,3 +18,8 @@ config :inn_checker, InnCheckerWeb.Endpoint,
   http: [port: String.to_integer(System.get_env("APP_PORT", "4000"))],
   check_origin: String.split(System.get_env("CORS_ORIGIN", "//#{System.fetch_env!("SERVER_HOST")}"), ~r/\s+/),
   server: true
+
+config :inn_checker, InnChecker.Guardian,
+  issuer: "inn_checker",
+  # mix guardian.gen.secret
+  secret_key: System.fetch_env!("GUARDIAN_KEY")

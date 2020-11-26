@@ -11,6 +11,11 @@ config :inn_checker, InnCheckerWeb.Endpoint,
   pubsub_server: InnChecker.PubSub,
   live_view: [signing_salt: "metoOrMB"]
 
+config :inn_checker, InnChecker.Guardian,
+  issuer: "inn_checker",
+  # mix guardian.gen.secret
+  secret_key: "5bOQX6Pqv1OTEylh1oq9Jiyhc6IZ5rrPf1VXZdT6SEqELw8mljPAXJ0rUPk2Keay"
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
