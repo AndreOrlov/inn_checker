@@ -1,6 +1,7 @@
 defmodule InnCheckerWeb.PageLive do
   @moduledoc false
 
+  alias InnChecker.Schema.History
   alias InnChecker.Validator
 
   use InnCheckerWeb, :live_view
@@ -11,8 +12,8 @@ defmodule InnCheckerWeb.PageLive do
   end
 
   @impl true
-  def handle_event("inn_check", %{"inn-value" => inn_value} = _params, socket) do
-    history_queries = [inn_validation(inn_value) | socket.assigns[:history_queries]]
+  def handle_event("inn_check", %{"inn-value" => inn_value} = _params, %{assigns: %{remote_ip: remote_ip}} = socket) do
+    history_queries = [inn_validation(inn_value, remote_ip) | socket.assigns[:history_queries]]
     {:noreply, assign(socket, inn_value: "", history_queries: history_queries)}
   end
 
@@ -26,10 +27,16 @@ defmodule InnCheckerWeb.PageLive do
     tuple |> Tuple.to_list() |> Enum.join(connector)
   end
 
-  defp inn_validation(inn_string) do
-    case Validator.validation(inn_string) do
-      {:ok, str} -> format_result(str, DateTime.utc_now(), "correct")
-      _          -> format_result(inn_string, DateTime.utc_now(), "incorrect")
+  defp inn_validation(inn_string, remote_ip) do
+    {status, res_validation} =
+      case Validator.validation(inn_string) do
+        {:ok, validated_str} -> {"correct", validated_str}
+        _                    -> {"incorrect", inn_string}
+      end
+
+    case inn_validation_save(remote_ip, res_validation, status) do
+      {:ok, %History{} = history} -> format_result(history.inn, history.inserted_at, history.status)
+      {:error, %Ecto.Changeset{}} -> "Can not save result"
     end
   end
 
@@ -38,5 +45,15 @@ defmodule InnCheckerWeb.PageLive do
       [dt.day, dt.month, dt.year, dt.hour, dt.minute, inn_string, result]
     )
     |> IO.iodata_to_binary()
+  end
+
+  defp inn_validation_save(ip, inn_string, result) when is_tuple(ip) do
+    inn_validation_save(tuple_to_str(ip), inn_string, result)
+  end
+  defp inn_validation_save(ip, inn_string, result) do
+    case History.create(%{ip: ip, inn: inn_string, status: result}) do
+      {:ok, _history} = res -> res
+      {:error, _}          -> {:error, :not_save}
+    end
   end
 end
