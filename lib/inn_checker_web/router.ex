@@ -43,7 +43,6 @@ defmodule InnCheckerWeb.Router do
   end
 
   def put_client_ip(conn, _) do
-    IO.inspect(conn)
     Plug.Conn.put_session(conn, :remote_ip, conn.remote_ip)
   end
 end
