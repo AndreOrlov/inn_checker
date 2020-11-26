@@ -11,7 +11,7 @@ defmodule InnCheckerWeb.PageLive do
   end
 
   @impl true
-  def handle_event("inn_check", %{"inn-value" => inn_value} = params, socket) do
+  def handle_event("inn_check", %{"inn-value" => inn_value} = _params, socket) do
     history_queries = [inn_validation(inn_value) | socket.assigns[:history_queries]]
     {:noreply, assign(socket, inn_value: "", history_queries: history_queries)}
   end
