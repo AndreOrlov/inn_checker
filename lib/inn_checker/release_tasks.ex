@@ -28,6 +28,7 @@ defmodule InnChecker.ReleaseTasks do
 
     run_migrations()
 
+    # TODO: implementation module
     InnChecker.Seeds.run(opts)
 
     stop_services()

@@ -13,6 +13,7 @@ defmodule InnCheckerWeb.PageLive do
     {:ok, assign(socket, results: %{}, inn_value: "", history_queries: [], remote_ip: remote_ip)}
   end
 
+  @impl true
   def handle_info(:update, %{assigns: %{remote_ip: remote_ip}} = socket) do
     history_queries = history_load_for(remote_ip)
     {:noreply, assign(socket, history_queries: history_queries)}
@@ -69,7 +70,7 @@ defmodule InnCheckerWeb.PageLive do
   end
   defp history_load_for(ip) when is_binary(ip) do
     History.get(%{ip: ip})
-    |> Enum.map(fn %History{ip: ip, inn: inn, inserted_at: inserted_at, status: status} ->
+    |> Enum.map(fn %History{inn: inn, inserted_at: inserted_at, status: status} ->
         # TODO: store this string in table histories
         format_result(inn, inserted_at, status)
        end)

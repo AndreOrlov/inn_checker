@@ -33,6 +33,7 @@ defmodule InnChecker.Schema.History do
     |> validate_inclusion(:status, @statuses)
   end
 
+  @impl InnChecker.Schema
   def get(%{ip: ip}) when is_binary(ip) do
     query =
       from u in __MODULE__,
