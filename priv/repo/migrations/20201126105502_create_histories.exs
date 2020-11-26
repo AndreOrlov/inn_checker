@@ -7,8 +7,8 @@ defmodule InnChecker.Repo.Migrations.CreateHistories do
     create table(:histories, primary_key: false) do
       add :id, :uuid, primary_key: true
       add :ip, :string, default: "unknown", size: 20
-      add :inn, :string, size: 12
-      add :result, :string
+      add :inn, :string, null: false, size: 12
+      add :status, :string, null: false
 
       timestamps()
     end
