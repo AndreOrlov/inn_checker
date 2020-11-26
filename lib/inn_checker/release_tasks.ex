@@ -1,6 +1,8 @@
 defmodule InnChecker.ReleaseTasks do
   @moduledoc """
   Usable tasks in release
+  Connect to release container iex 'docker-compose exec inn-checker-stage /opt/app/bin/inn_checker remote'
+    from dir contains docker-compose.yml file
   """
 
   @start_apps [
