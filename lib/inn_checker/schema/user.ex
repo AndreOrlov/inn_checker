@@ -60,6 +60,10 @@ defmodule InnChecker.Schema.User do
   def verify_user(%{password: password} = params) do
     with {:ok, user} <- get(params) do
       Argon2.check_pass(user, password)
+    else
+      res ->
+        Argon2.no_user_verify()
+        res
     end
   end
 
