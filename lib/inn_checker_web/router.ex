@@ -2,6 +2,7 @@ defmodule InnCheckerWeb.Router do
   use InnCheckerWeb, :router
 
   pipeline :browser do
+    plug InnChecker.Session.Plug
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_live_flash

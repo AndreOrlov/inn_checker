@@ -13,6 +13,8 @@ defmodule InnChecker.Application do
       InnChecker.Repo,
       # Start the Telemetry supervisor
       InnCheckerWeb.Telemetry,
+      # User live session
+      InnChecker.Session,
       # Start the PubSub system
       {Phoenix.PubSub, name: InnChecker.PubSub},
       # Start the Endpoint (http/https)
