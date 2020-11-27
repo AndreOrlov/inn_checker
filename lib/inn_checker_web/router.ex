@@ -42,7 +42,7 @@ defmodule InnCheckerWeb.Router do
     end
   end
 
-  def put_client_ip(conn, _) do
+  defp put_client_ip(conn, _) do
     Plug.Conn.put_session(conn, :remote_ip, conn.remote_ip)
   end
 end
