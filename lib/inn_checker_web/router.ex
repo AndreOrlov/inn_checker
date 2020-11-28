@@ -20,7 +20,8 @@ defmodule InnCheckerWeb.Router do
     pipe_through :browser
 
     live "/", PageLive, :index
-    live "/admin", LoginLive, :index
+    live "/login", LoginLive, :index
+    live "/admin", AdminLive, :index
   end
 
   if Mix.env() in [:dev, :test] do
