@@ -35,7 +35,11 @@ defmodule InnChecker.Schema.History do
 
   @impl InnChecker.Schema
   def get(:all) do
-    super(:all)
+    query =
+      from u in __MODULE__,
+        order_by: [desc: u.inserted_at],
+        select: u
+    Repo.all(query)
   end
   def get(%{ip: ip}) when is_binary(ip) do
     query =
@@ -44,5 +48,8 @@ defmodule InnChecker.Schema.History do
         order_by: [desc: u.inserted_at],
         select: u
     Repo.all(query)
+  end
+  def get(id) when is_binary(id) do
+    super(id)
   end
 end
