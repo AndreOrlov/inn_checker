@@ -10,7 +10,7 @@ defmodule InnCheckerWeb.PageLive do
   def mount(_params, %{"remote_ip" => remote_ip} = _session, socket) do
     if connected?(socket), do: send(self(), :update)
 
-    {:ok, assign(socket, results: %{}, inn_value: "", history_queries: [], remote_ip: remote_ip)}
+    {:ok, assign(socket, %{default_assigns() | remote_ip: remote_ip})}
   end
 
   @impl true
@@ -26,6 +26,8 @@ defmodule InnCheckerWeb.PageLive do
   end
 
   # private
+
+  def default_assigns(), do: %{inn_value: "", history_queries: [], remote_ip: "inknown"}
 
   defp has_history([]), do: false
   defp has_history(_history_queries), do: true
