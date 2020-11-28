@@ -48,6 +48,12 @@ defmodule InnCheckerWeb.AdminLive do
     {:noreply, clear_flash(socket)}
   end
 
+  def handle_info({:updated_blocking_status, blocker}, socket) do
+    IO.inspect(socket, label: UPDATED_BLOCKING_STATUS_ADMIN_LIVE)
+    send_update BlockerComponent, id: blocker.id, item_id: blocker.item_id, is_blocking: blocker.is_blocking
+    {:noreply, socket}
+  end
+
   # private
 
   defp default_assigns(), do: %{history_queries: [], user: nil}
