@@ -7,7 +7,7 @@ defmodule InnCheckerWeb.AdminLive do
   alias InnChecker.Session
 
   @impl true
-  def mount(_params, %{"session_id" => session_id} = session, socket) do
+  def mount(_params, %{"session_id" => session_id} = _session, socket) do
     socket =
       case Session.get(session_id, :user) do
         nil  ->
@@ -23,10 +23,11 @@ defmodule InnCheckerWeb.AdminLive do
 
       {:ok, socket}
   end
-  def mount(_params, session, socket) do
+  def mount(_params, _session, socket) do
     {:ok, redirect(socket, to: "/login")}
   end
 
+  @impl true
   def handle_info(:update, socket) do
     history_queries = history_load()
     {:noreply, assign(socket, history_queries: history_queries)}
