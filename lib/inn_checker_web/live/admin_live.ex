@@ -32,7 +32,7 @@ defmodule InnCheckerWeb.AdminLive do
     socket =
       case History.delete(id) do
         {:ok, _deleted_row} -> assign(socket, history_queries: history_load())
-        _                   -> put_flash(socket, :error, "Can not delete")
+        _                   -> put_flash_autoclose(socket, :error, "Can not delete")
       end
 
     {:noreply, socket}
@@ -51,6 +51,12 @@ defmodule InnCheckerWeb.AdminLive do
   # private
 
   defp default_assigns(), do: %{history_queries: [], user: nil}
+
+  defp put_flash_autoclose(socket, kind, msg_str, expire_ms \\ 3000)
+  defp put_flash_autoclose(socket, kind, msg_str, expire_ms) when kind in ~w[error info]a do
+    Process.send_after(self(), :clear_flash, 5000)
+    put_flash(socket, kind, msg_str)
+  end
 
   defp has_history([]), do: false
   defp has_history([_ | _]), do: true
