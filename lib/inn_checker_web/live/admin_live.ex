@@ -28,6 +28,17 @@ defmodule InnCheckerWeb.AdminLive do
   end
 
   @impl true
+  def handle_event("drop", %{"id" => id}, socket) do
+    socket =
+      case History.delete(id) do
+        {:ok, _deleted_row} -> assign(socket, history_queries: history_load())
+        _                   -> put_flash(socket, :error, "Can not delete")
+      end
+
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_info(:update, socket) do
     history_queries = history_load()
     {:noreply, assign(socket, history_queries: history_queries)}

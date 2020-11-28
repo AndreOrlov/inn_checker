@@ -1,12 +1,32 @@
 <section class="row">
   <div class="column">
     <%=if has_history(@history_queries) do %>
-    <h3> History </h2>
-    <dl>
-      <%= for item <- @history_queries do %>
-        <dt class="history"><%= item.inn %></dt>
-      <% end %>
-    </dl>
+      <table>
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Inn</th>
+            <th>Status</th>
+            <th>From ip</th>
+            <th>Operations</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= for item <- @history_queries do %>
+            <tr>
+              <td><%= item.inserted_at %></td>
+              <td><%= item.inn %></td>
+              <td><%= item.status %></td>
+              <td><%= item.ip %></td>
+              <td>
+                <%= if true do %>
+                  <a class="button" href="#" phx-capture-click="drop" phx-value-id="<%= item.id %>">Drop</a>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     <% end %>
   </div>
 </section>
