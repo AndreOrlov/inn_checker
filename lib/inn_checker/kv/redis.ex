@@ -35,6 +35,17 @@ defmodule InnChecker.KV.Redis do
     end
   end
 
+  def ttl(redix, key) do
+    command = ["TTL", key]
+
+    case Redix.command(redix, command) do
+      {:ok, -2}        -> {:error, :not_found_key}
+      {:ok, -1}        -> {:error, :expire_not_set}
+      {:ok, remaining} -> {:ok, remaining}
+      error            -> {:error, {error, "Error execute..."}}
+    end
+  end
+
   def delete(redix, key) do
     command = ["DEL", key]
 
@@ -52,6 +63,7 @@ defmodule InnChecker.KV.Redis do
       def put(key, value, expire_sec), do: unquote(__MODULE__).put(unquote(redix), key, value, expire_sec)
 
       def get(key), do: unquote(__MODULE__).get(unquote(redix), key)
+      def ttl(key), do: unquote(__MODULE__).ttl(unquote(redix), key)
       def delete(key), do: unquote(__MODULE__).delete(unquote(redix), key)
     end
   end
