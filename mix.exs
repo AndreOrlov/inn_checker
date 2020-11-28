@@ -50,7 +50,7 @@ defmodule InnChecker.MixProject do
       {:uuid, "~> 1.1"},
 
       {:redix, "~> 1.0"}, # KV-storage
-      {:guardian, "~> 2.1.0"}, # auth
+
       {:argon2_elixir, "~> 2.3"}, # crypto
 
       # code climate
