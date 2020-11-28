@@ -34,6 +34,9 @@ defmodule InnChecker.Schema.History do
   end
 
   @impl InnChecker.Schema
+  def get(:all) do
+    super(:all)
+  end
   def get(%{ip: ip}) when is_binary(ip) do
     query =
       from u in __MODULE__,
