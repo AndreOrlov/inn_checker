@@ -90,6 +90,8 @@ defmodule InnCheckerWeb do
       import InnCheckerWeb.ErrorHelpers
       import InnCheckerWeb.Gettext
       alias InnCheckerWeb.Router.Helpers, as: Routes
+      # LiveComponents
+      alias InnCheckerWeb.BlockerComponent
     end
   end
 
