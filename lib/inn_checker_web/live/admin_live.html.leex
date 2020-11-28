@@ -23,7 +23,11 @@
                   <a class="button" href="#" phx-capture-click="drop" phx-value-id="<%= item.id %>">Drop</a>
                 <% end %>
                 <%= if true do %>
-                  <%= live_component @socket, InnCheckerWeb.BlockerComponent, item_id: item.id %>
+                  <%= live_component @socket,
+                    BlockerComponent,
+                    id: "blocker_#{item.id}",
+                    item_id: item.id
+                  %>
                 <% end %>
               </td>
             </tr>
