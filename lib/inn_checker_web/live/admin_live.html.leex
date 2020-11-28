@@ -1,0 +1,12 @@
+<section class="row">
+  <div class="column">
+    <%=if has_history(@history_queries) do %>
+    <h3> History </h2>
+    <dl>
+      <%= for item <- @history_queries do %>
+        <dt class="history"><%= item.inn %></dt>
+      <% end %>
+    </dl>
+    <% end %>
+  </div>
+</section>
