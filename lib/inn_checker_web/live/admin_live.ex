@@ -44,6 +44,7 @@ defmodule InnCheckerWeb.AdminLive do
     {:noreply, assign(socket, history_queries: history_queries)}
   end
 
+  # TODO: 1234 refactor move to module
   def handle_info(:clear_flash, socket) do
     {:noreply, clear_flash(socket)}
   end
@@ -65,9 +66,10 @@ defmodule InnCheckerWeb.AdminLive do
 
   defp build_id(id), do: "blocker_#{id}"
 
+  # TODO: 1234 refactor move to module
   defp put_flash_autoclose(socket, kind, msg_str, expire_ms \\ 3000)
   defp put_flash_autoclose(socket, kind, msg_str, expire_ms) when kind in ~w[error info]a do
-    Process.send_after(self(), :clear_flash, 5000)
+    Process.send_after(self(), :clear_flash, expire_ms)
     put_flash(socket, kind, msg_str)
   end
 
@@ -77,7 +79,7 @@ defmodule InnCheckerWeb.AdminLive do
   defp history_load, do: History.get(:all)
 
   # group id by ip field
-  def history_group_by_ip(histories) do
+  defp history_group_by_ip(histories) do
     histories
     |> Enum.group_by(&Map.take(&1, [:ip]))
     |> Enum.map(fn {key, values} ->
