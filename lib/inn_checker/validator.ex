@@ -1,10 +1,8 @@
 defmodule InnChecker.Validator do
   @moduledoc false
 
-  # "7723747750" correct ten-digit INN TODO: rad
-  # "500100732259" correct twelve-digit INN TODO: rad
-
-  # TODO: add tests
+  # "7723747750" correct ten-digit INN
+  # "500100732259" correct twelve-digit INN
 
   @spec validation(String.t()) :: {:ok, String.t()} | {:error, atom()}
   def validation(inn_string) do
