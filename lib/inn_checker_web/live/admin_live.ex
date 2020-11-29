@@ -2,6 +2,7 @@ defmodule InnCheckerWeb.AdminLive do
   @moduledoc false
 
   use InnCheckerWeb, :live_view
+  use InnCheckerWeb.FlashAutocloser
 
   alias InnChecker.Schema.History
   alias InnChecker.Session
@@ -44,11 +45,6 @@ defmodule InnCheckerWeb.AdminLive do
     {:noreply, assign(socket, history_queries: history_queries)}
   end
 
-  # TODO: 1234 refactor move to module
-  def handle_info(:clear_flash, socket) do
-    {:noreply, clear_flash(socket)}
-  end
-
   def handle_info({:updated_blocking_status, blocker}, socket) do
     socket.assigns.history_queries
     |> history_group_by_ip()
@@ -65,13 +61,6 @@ defmodule InnCheckerWeb.AdminLive do
   defp default_assigns, do: %{history_queries: [], user: nil}
 
   defp build_id(id), do: "blocker_#{id}"
-
-  # TODO: 1234 refactor move to module
-  defp put_flash_autoclose(socket, kind, msg_str, expire_ms \\ 3000)
-  defp put_flash_autoclose(socket, kind, msg_str, expire_ms) when kind in ~w[error info]a do
-    Process.send_after(self(), :clear_flash, expire_ms)
-    put_flash(socket, kind, msg_str)
-  end
 
   defp has_history([]), do: false
   defp has_history([_ | _]), do: true
