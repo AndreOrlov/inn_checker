@@ -7,6 +7,7 @@ services:
       - 80:80
     links:
       - inn-checker-stage-store:db
+      - kv_store:redis
     environment:
       DB_USERNAME: inn_checker
       DB_PASSWORD: R1#_42!2o
@@ -19,8 +20,7 @@ services:
       SERVER_PORT: 80
       # 24 |> :crypto.strong_rand_bytes() |> Base.encode64
       SERVER_LIVE_SALT: +W386VsinWfla28cT56R0f6ZJNCQbBUL
-      # mix guardian.gen.secret
-      GUARDIAN_KEY: YaOD84mXt7IjR6Fq/5uzV94gr0LpqiGAAVAdJME96VyqoMyX1MIh4pfV29sixLfx
+      REDIS_URL: redis
   inn-checker-stage-store:
     image: postgres:12-alpine
     restart: always
