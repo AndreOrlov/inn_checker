@@ -3,6 +3,8 @@ defmodule InnCheckerWeb.BlockerComponent do
 
   use InnCheckerWeb, :live_component
 
+  alias InnChecker.Trust
+
   import InnChecker.Blocker
 
   def render(assigns) do
@@ -31,12 +33,17 @@ defmodule InnCheckerWeb.BlockerComponent do
     {:ok, assign(socket, default_assign())}
   end
 
+  def update(%{id: id, item_id: item_id, user: user} = _assigns, socket) do
+    {:ok, assign(socket, %{id: id, item_id: item_id, is_blocking: is_blocked(item_id), user: user})}
+  end
   def update(%{id: id, item_id: item_id} = _assigns, socket) do
     {:ok, assign(socket, %{id: id, item_id: item_id, is_blocking: is_blocked(item_id)})}
   end
 
-  def handle_event("block", %{"expire" => expire} = _params, %{assigns: %{id: id, item_id: item_id}} = socket) do
-    with {exp, ""} <- Integer.parse(expire) do
+  def handle_event("block", %{"expire" => expire} = _params, %{assigns: %{id: id, item_id: item_id, user: user}} = socket) do
+    with true <- Trust.can?(user, :manage, :admin),
+      {exp, ""} <- Integer.parse(expire)
+    do
       res = blocked_row(item_id, exp)
       send(self(), {:updated_blocking_status, %{id: id, item_id: item_id, is_blocking: is_blocked(res)}})
     end
@@ -53,7 +60,7 @@ defmodule InnCheckerWeb.BlockerComponent do
 
   # private
 
-  defp default_assign, do: %{id: "", item_id: "", is_blocking: false}
+  defp default_assign, do: %{id: "", item_id: "", is_blocking: false, user: nil}
 
   defp blocking_status(id) when is_binary(id) do
     id |> time_left_block() |> formatter_blocking_status()

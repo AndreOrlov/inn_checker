@@ -6,6 +6,7 @@ defmodule InnCheckerWeb.AdminLive do
 
   alias InnChecker.Schema.History
   alias InnChecker.Session
+  alias InnChecker.Trust
 
   @impl true
   def mount(_params, %{"session_id" => session_id} = _session, socket) do
@@ -15,11 +16,16 @@ defmodule InnCheckerWeb.AdminLive do
           redirect(socket, to: "/login")
 
         user ->
-          if connected?(socket) do
-            Process.send_after(self(), :clear_flash, 5000)
-            send(self(), :update)
+          if can?(user, :drop) do
+            if connected?(socket) do
+              Process.send_after(self(), :clear_flash, 5000)
+              send(self(), :update)
+            end
+            assign(socket, %{default_assigns() | user: user})
+          else
+            Session.put(session_id, :user, nil)
+            socket |> clear_flash() |> redirect(to: "/login")
           end
-          assign(socket, %{default_assigns() | user: user})
       end
 
       {:ok, socket}
@@ -45,13 +51,15 @@ defmodule InnCheckerWeb.AdminLive do
     {:noreply, assign(socket, history_queries: history_queries)}
   end
 
-  def handle_info({:updated_blocking_status, blocker}, socket) do
-    socket.assigns.history_queries
-    |> history_group_by_ip()
-    |> Map.get(blocker.item_id, [])
-    |> Enum.each(fn id ->
-      send_update BlockerComponent, id: build_id(id), item_id: blocker.item_id, is_blocking: blocker.is_blocking
-    end)
+  def handle_info({:updated_blocking_status, blocker}, %{assigns: %{user: user}} = socket) do
+    if can?(user, :block) do
+      socket.assigns.history_queries
+      |> history_group_by_ip()
+      |> Map.get(blocker.item_id, [])
+      |> Enum.each(fn id ->
+        send_update BlockerComponent, id: build_id(id), item_id: blocker.item_id, is_blocking: blocker.is_blocking
+      end)
+    end
 
     {:noreply, socket}
   end
@@ -59,6 +67,13 @@ defmodule InnCheckerWeb.AdminLive do
   # private
 
   defp default_assigns, do: %{history_queries: [], user: nil}
+
+  defp can?(user, :drop) do
+    Trust.can?(user, :manage, :operator)
+  end
+  defp can?(user, :block) do
+    Trust.can?(user, :manage, :admin)
+  end
 
   defp build_id(id), do: "blocker_#{id}"
 
