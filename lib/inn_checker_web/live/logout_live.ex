@@ -5,6 +5,7 @@ defmodule InnCheckerWeb.LogoutLive do
 
   alias InnChecker.Session
 
+  @impl true
   def render(assigns) do
     ~L"""
     """
