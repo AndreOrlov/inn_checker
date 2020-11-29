@@ -7,7 +7,9 @@ defmodule InnCheckerWeb.LoginLive do
   alias InnChecker.Session
 
   @impl true
-  def mount(_params, %{"session_id" => session_id} = session, socket) do
+  def mount(_params, %{"session_id" => session_id} = _session, socket) do
+    Session.put(session_id, :user, nil)
+
     assigns = Map.put(default_assigns(), :session_id, session_id)
 
     {:ok, assign(socket, assigns)}
@@ -22,7 +24,7 @@ defmodule InnCheckerWeb.LoginLive do
       end
     Session.put(session_id, :user, user)
 
-    {:noreply, push_redirect(socket, to: "/admin", replace: true)}
+    {:noreply, redirect(socket, to: "/admin")}
   end
   def handle_event("login", _params, socket) do
     {:noreply, socket}
@@ -36,12 +38,12 @@ defmodule InnCheckerWeb.LoginLive do
 
   # private
 
-  defp default_assigns(), do: %{login: "", password: ""}
+  defp default_assigns, do: %{login: "", password: ""}
 
   defp verify_user(login, password) do
     case User.verify_user(%{login: login, password: password}) do
-      {:ok, user} = res -> res
-      _                 -> {:error, :invalid_user}
+      {:ok, _user} = res -> res
+      _                  -> {:error, :invalid_user}
     end
   end
 end

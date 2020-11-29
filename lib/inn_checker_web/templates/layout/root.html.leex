@@ -17,6 +17,11 @@
             <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
               <li><%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home) %></li>
             <% end %>
+            <%= if InnChecker.Session.Plug.auth?(@conn) do %>
+              <li> <%= link "Logout", to: "/logout" %></li>
+            <% else %>
+              <li> <%= link "Login", to: "/login" %></li>
+            <% end %>
           </ul>
         </nav>
         <a href="https://phoenixframework.org/" class="phx-logo">

@@ -21,6 +21,7 @@ defmodule InnCheckerWeb.Router do
 
     live "/", PageLive, :index
     live "/login", LoginLive, :index
+    live "/logout", LogoutLive, :index
     live "/admin", AdminLive, :index
   end
 

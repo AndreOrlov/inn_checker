@@ -15,7 +15,7 @@ defmodule InnChecker.Session do
 
     def init(default), do: default
 
-    def call(conn, _) do
+    def call(%Conn{} = conn, _) do
       conn = Conn.fetch_session(conn)
       case Conn.get_session(conn, @session_key) do
         nil ->
@@ -27,6 +27,16 @@ defmodule InnChecker.Session do
             {:ok, _}             -> conn
           end
       end
+    end
+
+    def auth?(%Conn{} = conn) do
+      conn = Conn.fetch_session(conn)
+      res =
+        case Conn.get_session(conn, @session_key) do
+          nil -> nil
+          id  -> Session.get(id, :user)
+        end
+      !!res
     end
 
     defp start_session(conn) do
@@ -55,7 +65,7 @@ defmodule InnChecker.Session do
   def get(id, key, default \\ nil) do
     case get_session(id) do
       {:ok, session} -> Map.get(session, key, default)
-      _              -> nil
+      _              -> default
     end
   end
 
