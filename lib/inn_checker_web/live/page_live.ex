@@ -1,16 +1,18 @@
 defmodule InnCheckerWeb.PageLive do
   @moduledoc false
 
+  use InnCheckerWeb, :live_view
+
   alias InnChecker.Schema.History
   alias InnChecker.Validator
 
-  use InnCheckerWeb, :live_view
+  import InnChecker.Blocker
 
   @impl true
   def mount(_params, %{"remote_ip" => remote_ip} = _session, socket) do
     if connected?(socket), do: send(self(), :update)
 
-    {:ok, assign(socket, %{default_assigns() | remote_ip: remote_ip})}
+    {:ok, assign(socket, %{default_assigns() | remote_ip: tuple_to_str(remote_ip)})}
   end
 
   @impl true
@@ -21,13 +23,31 @@ defmodule InnCheckerWeb.PageLive do
 
   @impl true
   def handle_event("inn_check", %{"inn-value" => inn_value} = _params, %{assigns: %{remote_ip: remote_ip}} = socket) do
-    history_queries = [inn_validation(inn_value, remote_ip) | socket.assigns[:history_queries]]
-    {:noreply, assign(socket, inn_value: "", history_queries: history_queries)}
+    if is_blocked(remote_ip)  do
+      socket = put_flash_autoclose(socket, :error, "Your ip is blocked")
+
+      {:noreply, assign(socket, inn_value: "")}
+    else
+      history_queries = [inn_validation(inn_value, remote_ip) | socket.assigns[:history_queries]]
+      {:noreply, assign(socket, inn_value: "", history_queries: history_queries)}
+    end
+  end
+
+  # TODO: 1234 refactor move to module
+  def handle_info(:clear_flash, socket) do
+    {:noreply, clear_flash(socket)}
   end
 
   # private
 
-  def default_assigns(), do: %{inn_value: "", history_queries: [], remote_ip: "inknown"}
+  def default_assigns, do: %{inn_value: "", history_queries: [], remote_ip: "inknown"}
+
+  # TODO: 1234 refactor move to module
+  defp put_flash_autoclose(socket, kind, msg_str, expire_ms \\ 3000)
+  defp put_flash_autoclose(socket, kind, msg_str, expire_ms) when kind in ~w[error info]a do
+    Process.send_after(self(), :clear_flash, expire_ms)
+    put_flash(socket, kind, msg_str)
+  end
 
   defp has_history([]), do: false
   defp has_history(_history_queries), do: true
