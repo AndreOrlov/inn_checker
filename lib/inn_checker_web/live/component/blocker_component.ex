@@ -20,7 +20,7 @@ defmodule InnCheckerWeb.BlockerComponent do
     <% else %>
        <form class="counter" phx-submit="block" phx-target="<%= @myself %>">
         <input style="width:60px" type="number" name="expire" min="0" max="120" value=0 step=10>
-        <button title="<%= blocking_status(@item_id) %>" type="submit" phx-disable-with="Block">
+        <button title="<%= blocking_status(@item_id) %>" type="submit">
           <i class="fa fa-hourglass-start"></i>
         </button>
       </form>
