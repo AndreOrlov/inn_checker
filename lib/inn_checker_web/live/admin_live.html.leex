@@ -23,17 +23,25 @@
                 <td><%= item.ip %></td>
               <% end %>
               <td>
-                <%= if can?(@user, :drop) do %>
-                  <a class="button" href="#" phx-capture-click="drop" phx-value-id="<%= item.id %>">Drop</a>
-                <% end %>
-                <%= if can?(@user, :block) do %>
-                  <%= live_component @socket,
-                    BlockerComponent,
-                    id: build_id(item.id),
-                    item_id: item.ip,
-                    user: @user
-                  %>
-                <% end %>
+                <div class="operations">
+                  <div>
+                    <%= if can?(@user, :drop) do %>
+                      <button class="btn" phx-click="drop" phx-value-id="<%= item.id %>">
+                        <i class="fa fa-trash"></i>
+                      </button>
+                    <% end %>
+                  </div>
+                  <div>
+                    <%= if can?(@user, :block) do %>
+                      <%= live_component @socket,
+                        BlockerComponent,
+                        id: build_id(item.id),
+                        item_id: item.ip,
+                        user: @user
+                      %>
+                    <% end %>
+                  </div>
+                </div>
               </td>
             </tr>
           <% end %>

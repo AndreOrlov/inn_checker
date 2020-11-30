@@ -9,23 +9,22 @@ defmodule InnCheckerWeb.BlockerComponent do
 
   def render(assigns) do
     ~L"""
-    <div>
     <%= if @is_blocking do %>
-      <a title="<%= blocking_status(@item_id) %>"
-         class="button"
-         href="#"
-         phx-capture-click="unblock"
+      <button title="<%= blocking_status(@item_id) %>"
+         class="btn"
+         phx-click="unblock"
          phx-value-id="<%= @item_id %>"
          phx-target="<%= @myself %>">
-        Unblock
-      </a>
+        <i class="fa fa-calculator"></i>
+      </button>
     <% else %>
-       <form phx-submit="block" phx-target="<%= @myself %>">
+       <form class="counter" phx-submit="block" phx-target="<%= @myself %>">
         <input style="width:60px" type="number" name="expire" min="0" max="120" value=0 step=10>
-        <button title="<%= blocking_status(@item_id) %>" type="submit" phx-disable-with="Block">Block</button>
-      </form
+        <button title="<%= blocking_status(@item_id) %>" type="submit" phx-disable-with="Block">
+          <i class="fa fa-hourglass-start"></i>
+        </button>
+      </form>
     <% end %>
-    </div>
     """
   end
 
