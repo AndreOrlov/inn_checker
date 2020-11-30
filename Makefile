@@ -7,5 +7,5 @@ docker-image:
 
 upload:
 	docker save -o /tmp/inn-checker.img inn-checker
-	scp /tmp/inn-checker.img andre@84.201.164.251:/tmp
+	scp /tmp/inn-checker.img andre@andreorlov.ru:/tmp
 	rm /tmp/inn-checker.img

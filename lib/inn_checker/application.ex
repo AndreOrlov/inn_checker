@@ -6,11 +6,20 @@ defmodule InnChecker.Application do
   use Application
 
   def start(_type, _args) do
+    redis_opts =
+      :inn_checker
+      |> Application.get_env(:redis)
+      |> Keyword.put(:name, Redix)
+
     children = [
+      # Start Redis
+      {Redix, redis_opts},
       # Start the Ecto repository
       InnChecker.Repo,
       # Start the Telemetry supervisor
       InnCheckerWeb.Telemetry,
+      # User live session
+      InnChecker.Session,
       # Start the PubSub system
       {Phoenix.PubSub, name: InnChecker.PubSub},
       # Start the Endpoint (http/https)

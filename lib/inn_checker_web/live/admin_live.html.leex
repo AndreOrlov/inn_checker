@@ -1,0 +1,44 @@
+<section class="row">
+  <div class="column">
+    <%=if has_history(@history_queries) do %>
+      <table>
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Inn</th>
+            <th>Status</th>
+            <%= if can?(@user, :block) do %>
+              <th>From ip</th>
+            <% end %>
+            <th>Operations</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= for item <- @history_queries do %>
+            <tr>
+              <td><%= item.inserted_at %></td>
+              <td><%= item.inn %></td>
+              <td><%= item.status %></td>
+              <%= if can?(@user, :block) do %>
+                <td><%= item.ip %></td>
+              <% end %>
+              <td>
+                <%= if can?(@user, :drop) do %>
+                  <a class="button" href="#" phx-capture-click="drop" phx-value-id="<%= item.id %>">Drop</a>
+                <% end %>
+                <%= if can?(@user, :block) do %>
+                  <%= live_component @socket,
+                    BlockerComponent,
+                    id: build_id(item.id),
+                    item_id: item.ip,
+                    user: @user
+                  %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
+</section>
