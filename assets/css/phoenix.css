@@ -91,6 +91,72 @@ header nav a {
   text-align: left;
 }
 
+/* button as icon */
+.btn {
+  background-color: #0069d9;
+  border-radius: .4rem;
+  border: none;
+  color: white;
+  margin: 5px;
+  padding: 12px 16px;
+  font-size: 16px;
+  line-height: normal;
+  cursor: pointer;
+}
+
+/* background on mouse-over */
+.btn:hover {
+  background-color: #606c76;
+  color: white;
+}
+
+form.counter {
+  margin: 5px;
+  min-width: 100px;
+}
+/* Counter form */
+form.counter input[type=text], input[type=number] {
+  margin: auto;
+  padding: 10px;
+  font-size: 17px;
+  border: 1px solid grey;
+  border-radius: 0.4rem 0rem 0rem 0.4rem;
+  float: left;
+  width: 60px;
+  background: #f1f1f1;
+}
+
+form.counter button {
+  float: left;
+  line-height: normal;
+  margin: auto;
+  padding: 10px;
+  background: #0069d9;
+  color: white;
+  font-size: 17px;
+  border: 1px solid grey;
+  border-radius: 0rem 0.4rem 0.4rem 0rem;
+  border-left: none;
+  cursor: pointer;
+}
+
+form.counter button:hover {
+  background: #606c76;
+}
+
+form.counter::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.operations {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
 @media (min-width: 40.0rem) { /* Small devices (landscape phones, 576px and up) */
   header section {
     flex-direction: row;
