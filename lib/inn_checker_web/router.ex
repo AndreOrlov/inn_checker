@@ -9,6 +9,7 @@ defmodule InnCheckerWeb.Router do
     plug :put_root_layout, {InnCheckerWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug InnCheckerWeb.XForwardedFor, header: "x-real-ip"
     plug :put_client_ip
   end
 
