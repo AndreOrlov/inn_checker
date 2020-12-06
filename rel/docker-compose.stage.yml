@@ -3,8 +3,28 @@ services:
   inn-checker-stage:
     image: inn-checker
     restart: always
-    ports:
-      - 80:80
+    networks:
+      - web-network
+      - inn-checker-network
+    labels:
+      - traefik.enable=true
+
+      - traefik.http.middlewares.inn-checker-stage-redirect-www.redirectregex.regex=^http[s]?://www\.inn\.checker(/.*)?
+      - traefik.http.middlewares.inn-checker-stage-redirect-www.redirectregex.replacement=https://inn.checker$${1}
+      - traefik.http.middlewares.inn-checker-stage-redirect-www.redirectregex.permanent=true
+
+      - traefik.http.middlewares.inn-checker-stage-redirect-scheme.redirectscheme.scheme=https
+      - traefik.http.middlewares.inn-checker-stage-redirect-scheme.redirectscheme.permanent=true
+
+      - traefik.http.routers.inn-checker-stage-insecure.rule=Host(`inn.checker`,`www.inn.checker`)
+      - traefik.http.routers.inn-checker-stage-insecure.middlewares=inn-checker-stage-redirect-www@docker,inn-checker-stage-redirect-scheme@docker
+
+      - traefik.http.routers.inn-checker-stage.tls=true
+      - traefik.http.routers.inn-checker-stage.tls.certresolver=letsEncrypt
+      - traefik.http.routers.inn-checker-stage.rule=Host(`inn.checker`, `www.inn.checker`)
+      - traefik.http.routers.inn-checker-stage.middlewares=inn-checker-stage-redirect-www@docker
+
+      - traefik.http.services.inn-checker-stage.loadbalancer.server.port=4000
     links:
       - inn-checker-stage-store:db
       - kv_store:redis
@@ -13,10 +33,10 @@ services:
       DB_PASSWORD: R1#_42!2o
       DB_NAME: inn_checker_stage
       DB_HOST: db
-      APP_PORT: 80
+      APP_PORT: 4000
       # mix phx.gen.secret
       SECRET_KEY_BASE: bvcbcEkg8BO+2WP84yvvIlSYvxl5/1okLPTSY32q3haLopLZjHACQbDzeRR7Rnoi
-      SERVER_HOST: localhost
+      SERVER_HOST: inn.checker
       SERVER_PORT: 80
       # 24 |> :crypto.strong_rand_bytes() |> Base.encode64
       SERVER_LIVE_SALT: +W386VsinWfla28cT56R0f6ZJNCQbBUL
@@ -26,6 +46,8 @@ services:
     restart: always
     volumes:
       - ./db_data:/data
+    networks:
+      - inn-checker-network
     environment:
       LANG: ru_RU.utf8
       PGDATA: /data
@@ -35,3 +57,11 @@ services:
   kv_store:
     image: redis:alpine
     restart: always
+    networks:
+      - inn-checker-network
+
+networks:
+  inn-checker-network:
+    internal: true
+  web-network:
+    external: true
