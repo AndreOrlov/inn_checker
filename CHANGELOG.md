@@ -1,3 +1,7 @@
+v0.92
+
+* bug fix wrong ip behind proxy
+
 v0.91
 
 * styles add to operations column Admin panel
